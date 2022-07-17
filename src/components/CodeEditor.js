@@ -1,0 +1,58 @@
+import React, { useState } from "react";
+import "codemirror/lib/codemirror.css";
+import "codemirror/theme/base16-dark.css";
+import "codemirror/mode/xml/xml";
+import "codemirror/mode/javascript/javascript";
+import "codemirror/mode/css/css";
+import { Controlled as ControlledEditor } from "react-codemirror2";
+import { FaCompressAlt, FaExpandAlt } from "react-icons/fa";
+
+function CodeEditor(props) {
+  const { language, displayName, value, onChange, icon } = props;
+  const [open, setOpen] = useState(true);
+
+  function handleChange(editor, data, value) {
+    onChange(value);
+  }
+
+  return (
+    <div className={`editor-container ${open ? "" : "collapsed"}`}>
+      <div className="editor-title">
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "max-content",
+          }}
+        >
+          {icon}&nbsp;&nbsp;
+          {displayName}
+        </div>
+
+        <button
+          type="button"
+          className="expand-collapse-btn"
+          onClick={() => setOpen((prevOpen) => !prevOpen)}
+        >
+          {open ? <FaCompressAlt /> : <FaExpandAlt />}
+        </button>
+      </div>
+      <ControlledEditor
+        onBeforeChange={handleChange}
+        value={value}
+        className="code-mirror-wrapper"
+        style={{ height: "100%" }}
+        options={{
+          lineWrapping: true,
+          lint: true,
+          mode: language,
+          theme: "base16-dark",
+          lineNumbers: true,
+        }}
+      />
+    </div>
+  );
+}
+
+export default CodeEditor;
